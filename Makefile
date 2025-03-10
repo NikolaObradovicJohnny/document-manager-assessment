@@ -89,3 +89,9 @@ fixture: build makemigrations migrate plain-fixture
 
 plain-fixture:
 	$(IN_ENV) django-admin load_file_fixtures
+
+superuser:
+	$(IN_ENV) django-admin createsuperuser --email obradovic.nix@gmail.com
+
+test-api:
+	$(IN_ENV) django-admin test propylon_document_manager.file_versions

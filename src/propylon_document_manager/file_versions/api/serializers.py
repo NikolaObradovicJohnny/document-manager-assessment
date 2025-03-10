@@ -5,4 +5,4 @@ from ..models import FileVersion
 class FileVersionSerializer(serializers.ModelSerializer):
     class Meta:
         model = FileVersion
-        fields = "__all__"
+        fields = ["file_name", "file_owner", "version_number", "file", "uploaded_at"]
