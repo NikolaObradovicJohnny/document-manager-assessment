@@ -18,11 +18,19 @@ function App() {
     setToken(token);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setToken(null);
+  };
+
   return (
     <div className="App">
       <header className="App-header">
         {token ? (
-          <FileVersions token={token} />
+          <div>
+            <button className="logout" onClick={handleLogout}>Logout</button>
+            <FileVersions token={token} />
+          </div>
         ) : (
           <Login onLoginSuccess={handleLoginSuccess} />
         )}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Upload.css';
 
-function Upload() {
+function Upload({ setData }) {
     const [token, setToken] = useState(localStorage.getItem('token'));
     const [file, setFile] = useState(null);
     const [filename, setFilename] = useState('');
@@ -49,7 +49,22 @@ function Upload() {
 
             if (response.ok) {
                 setMessage("File uploaded successfully!");
+                setFile(null);
+                setFilename("");
                 console.log("Uploaded file:", data);
+
+                const updatedResponse = await fetch("http://localhost:8001/api/file_versions", {
+                    headers: {
+                        Authorization: `Token ${token}`,
+                    },
+                });
+                if (updatedResponse.ok) {
+                    const updatedFiles = await updatedResponse.json();
+                    setData(updatedFiles);
+                    setFile(null);
+                    setFilename("");
+                }
+
             } else {
                 setError(data.detail || "Upload failed");
             }

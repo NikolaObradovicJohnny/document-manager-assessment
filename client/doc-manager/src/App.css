@@ -28,6 +28,16 @@
   color: #61dafb;
 }
 
+button.logout {
+  padding: 12px;
+  margin: 5px 0;
+  border-radius: 15px;
+  border: none;
+  float: right;
+  background-color: #cc0a0a;
+  color: #fff;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

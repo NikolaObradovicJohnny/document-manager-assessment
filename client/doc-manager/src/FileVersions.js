@@ -22,17 +22,13 @@ function FileVersions({ token }) {
   console.log(data);
 
   useEffect(() => {
-    // fetch data
     const dataFetch = async () => {
-      // const token = localStorage.getItem("token"); // Get token from localStorage or another storage method
-      // const tokenHardcoded = "627bb8a4c4d5ad7940e57e06c7ff0615d127111f"; // Get token from localStorage or another storage method
-
       const data = await (
         await fetch("http://localhost:8001/api/file_versions",  {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Token ${token}`, // Add token here
+            Authorization: `Token ${token}`,
           },
         })
       ).json();
@@ -41,7 +37,6 @@ function FileVersions({ token }) {
       setData(data);
     };
 
-    // dataFetch();
     if (token) {
       dataFetch();
     }
@@ -49,7 +44,7 @@ function FileVersions({ token }) {
 
   return (
     <div>
-      <Upload />
+      <Upload setData={setData} />
       <h1>Found {data.length} File Versions</h1>
       { data.length > 0 
       ? 
