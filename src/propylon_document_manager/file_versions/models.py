@@ -66,13 +66,6 @@ def generate_file_hash(file):
         hasher.update(chunk)
     return hasher.hexdigest()
 
-# class Document(models.Model):
-#     name = models.CharField(max_length=512)
-#     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="documents")
-
-#     class Meta:
-#         unique_together = ("name", "owner")  # Each user can have unique document names
-
 def get_default_user():
     return User.objects.filter(is_superuser=True).first() or User.objects.first()
 

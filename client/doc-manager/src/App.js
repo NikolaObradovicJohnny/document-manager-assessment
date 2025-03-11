@@ -35,8 +35,8 @@ function App() {
         <header className="App-header">
           <Routes>
             {/* Redirect to login if not authenticated */}
-            <Route path="/" element={token ? <FileVersions token={token} /> : <Navigate to="/login" />} />
-            <Route path="/:filename" element={token ? <FileDetails token={token} /> : <Navigate to="/login" />} />
+            <Route path="/" element={token ? <FileVersions /> : <Navigate to="/login" />} />
+            <Route path="/:filename" element={token ? <FileDetails /> : <Navigate to="/login" />} />
             {/* Prevent logged-in users from accessing login page */}
             <Route path="/login" element={!token ? <Login onLoginSuccess={handleLoginSuccess} /> : <Navigate to="/" />} />
           </Routes>

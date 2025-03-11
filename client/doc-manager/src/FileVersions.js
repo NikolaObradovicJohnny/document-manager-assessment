@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import "./FileVersions.css";
 import Upload from "./components/Upload";
 import { Link } from "react-router-dom";
 import { getFileVersions } from "./services/apiService";
+import "./FileVersions.css";
 
 function FileVersionsList(props) {
   const file_versions = props.file_versions;
@@ -12,7 +12,7 @@ function FileVersionsList(props) {
         <Link to={`/${file_version.file_name}`}> {file_version.file_name} </Link>
       </h2>
       <p>
-        ID: {file_version.id} 
+        File Hash: {file_version.file_hash} 
         <br/> 
         Latest version: {file_version.version_number}
       </p>
@@ -20,7 +20,7 @@ function FileVersionsList(props) {
   ));
 }
 
-function FileVersions({ token }) {
+function FileVersions() {
   const [data, setData] = useState([]);
   console.log(data);
 
@@ -30,10 +30,8 @@ function FileVersions({ token }) {
       setData(data);
     };
 
-    if (token) {
-      dataFetch();
-    }
-  }, [token]);
+    dataFetch();
+  }, []);
 
   return (
     <div>

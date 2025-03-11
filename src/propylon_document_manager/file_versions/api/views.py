@@ -106,8 +106,6 @@ def upload_document(request):
 
     file_name = request.data.get("file_name")
     file_owner = request.user
-    # document_name = request.data.get("name")
-    # document, _ = Document.objects.get_or_create(name=document_name, owner=request.user)
 
     latest_version = FileVersion.objects\
         .filter(file_name=file_name, file_owner=file_owner)\

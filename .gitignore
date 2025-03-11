@@ -279,3 +279,6 @@ propylon_document_manager/media/
 ### DB
 *.sqlite*
 src/propylon_document_manager/media/documents/*
+
+### Environment variables
+.env
