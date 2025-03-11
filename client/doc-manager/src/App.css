@@ -1,10 +1,24 @@
 .App {
+  background-color: #282c34;
   text-align: center;
 }
 
 .App-logo {
   height: 40vmin;
   pointer-events: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+.file-version-link, 
+.file-version-link:focus, 
+.file-version-link:visited,
+.file-version a,
+.file-version a:focus,
+.file-version a:visited {
+  color: #fff;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -14,7 +28,6 @@
 }
 
 .App-header {
-  background-color: #282c34;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -29,13 +42,19 @@
 }
 
 button.logout {
-  padding: 12px;
-  margin: 5px 0;
-  border-radius: 15px;
-  border: none;
+  padding: 12px 21px;
+  border-bottom-left-radius: 15px;
+  border: 1px solid #cc0a0a;
+  border-right: none;
+  border-top: none;
   float: right;
   background-color: #cc0a0a;
   color: #fff;
+}
+button.logout:hover {
+  color: #cc0a0a;
+  background-color: #fff;
+  transition-duration: 1.2s;
 }
 
 @keyframes App-logo-spin {

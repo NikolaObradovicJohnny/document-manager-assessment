@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from "react";
 import "./FileVersions.css";
 import Upload from "./components/Upload";
+import { Link } from "react-router-dom";
 
 function FileVersionsList(props) {
   const file_versions = props.file_versions;
   return file_versions.map((file_version) => (
     <div className="file-version" key={file_version.id}>
-      <h2>File Name: {file_version.file_name}</h2>
+      <h2>
+        <Link to={`/${file_version.file_name}`}> {file_version.file_name} </Link>
+      </h2>
       <p>
-        ID: {file_version.id} Version: {file_version.version_number}
+        ID: {file_version.id} 
+        <br/> 
+        Latest version: {file_version.version_number}
       </p>
-      <button>
-        Show all versions of this file (with the option to upload new version)
-      </button>
     </div>
   ));
 }

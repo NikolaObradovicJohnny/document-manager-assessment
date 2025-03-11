@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Upload.css';
 
-function Upload({ setData }) {
+function Upload({ setData, fileFileName, isFilenameReadOnly }) {
     const [token, setToken] = useState(localStorage.getItem('token'));
     const [file, setFile] = useState(null);
-    const [filename, setFilename] = useState('');
+    const [filename, setFilename] = useState(fileFileName || '');
     const [error, setError] = useState('');
     const [message, setMessage] = useState('');
     const fileInputRef = useRef(null);
+    const readOnlyFileName = isFilenameReadOnly;
   
     useEffect(() => {
       const storedToken = localStorage.getItem('token');
@@ -20,7 +21,9 @@ function Upload({ setData }) {
         const selectedFile = e.target.files[0];
         if (selectedFile) {
             setFile(selectedFile);  // Get the selected file
-            setFilename(selectedFile.name);
+            if (!isFilenameReadOnly) { 
+                setFilename(selectedFile.name);
+            }
         } 
     };
   
@@ -50,7 +53,9 @@ function Upload({ setData }) {
             if (response.ok) {
                 setMessage("File uploaded successfully!");
                 setFile(null);
-                setFilename("");
+                if (!isFilenameReadOnly) { 
+                    setFilename("");
+                }
                 console.log("Uploaded file:", data);
 
                 const updatedResponse = await fetch("http://localhost:8001/api/file_versions", {
@@ -84,7 +89,9 @@ function Upload({ setData }) {
         const droppedFile = e.dataTransfer.files[0];
         if (droppedFile) {
             setFile(droppedFile);
-            setFilename(droppedFile.name);
+            if (!isFilenameReadOnly) { 
+                setFilename(droppedFile.name);
+            }
         }
     };
 
@@ -145,7 +152,7 @@ function Upload({ setData }) {
                 type="text"
                 placeholder="Filename"
                 value={filename}
-                onChange={(e) => setFilename(e.target.value)}
+                onChange={(e) => readOnlyFileName ? filename : setFilename(e.target.value)}
                 className="filename"
                 required
             />

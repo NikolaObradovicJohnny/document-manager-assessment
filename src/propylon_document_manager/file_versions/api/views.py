@@ -142,6 +142,20 @@ def get_document(request, filename):
     serializer = FileVersionSerializer(document_version)
     return Response(serializer.data)
 
+@api_view(["GET"])
+@permission_classes([permissions.IsAuthenticated])
+def get_all_versions_of_document(request, filename):
+    """Retrieve a document by name and all versions."""
+    file_owner = request.user
+
+    # Query files belonging to the user
+    query = FileVersion.objects.filter(file_name=filename, file_owner=file_owner).order_by("-version_number")
+
+    if not query:
+        return Response({"error": "File not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = FileVersionSerializer(query, many=True)
+    return Response(serializer.data)
 
 class TestAuthView(APIView):
     permission_classes = [IsAuthenticated]

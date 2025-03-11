@@ -9,7 +9,7 @@
     color: #fff;
 }
 .upload input.filename {
-    width: 97%;
+    width: calc(100% - 18px);
     padding: 9px;
     border: none;
 }

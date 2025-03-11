@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import './App.css';
 import FileVersions from './FileVersions';
+import FileDetails from './FileDetails';
 import Login from './components/Login';
 
 
@@ -14,8 +16,9 @@ function App() {
     }
   }, []);
 
-  const handleLoginSuccess = (token) => {
-    setToken(token);
+  const handleLoginSuccess = (newToken) => {
+    localStorage.setItem("token", newToken);
+    setToken(newToken);
   };
 
   const handleLogout = () => {
@@ -24,18 +27,20 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        {token ? (
-          <div>
-            <button className="logout" onClick={handleLogout}>Logout</button>
-            <FileVersions token={token} />
-          </div>
-        ) : (
-          <Login onLoginSuccess={handleLoginSuccess} />
-        )}
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+      {token ? <button className="logout" onClick={handleLogout}>Logout</button> : null}
+        <header className="App-header">
+          <Routes>
+            {/* Redirect to login if not authenticated */}
+            <Route path="/" element={token ? <FileVersions token={token} /> : <Navigate to="/login" />} />
+            <Route path="/:filename" element={token ? <FileDetails token={token} /> : <Navigate to="/login" />} />
+            {/* Prevent logged-in users from accessing login page */}
+            <Route path="/login" element={!token ? <Login onLoginSuccess={handleLoginSuccess} /> : <Navigate to="/" />} />
+          </Routes>
+        </header>
+      </div>
+    </Router>
   );
 }
 
