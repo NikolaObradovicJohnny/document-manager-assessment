@@ -3,9 +3,10 @@ import { useParams } from "react-router-dom";
 import Upload from "./components/Upload";
 import { getFileVersionsByName } from "./services/apiService";
 
-function FileDetails({ token }) {
+function FileDetails() {
     const { filename } = useParams();
     const [fileVersions, setFileVersions] = useState([]);
+    const BASE_URL = process.env.REACT_APP_BASE_URL;
 
     useEffect(() => {
         const fetchVersions = async () => {
@@ -24,9 +25,9 @@ function FileDetails({ token }) {
             <h2>Versions</h2>
             {fileVersions.length > 0 ? (
                 fileVersions.map((file) => (
-                    <div key={file.file}>
+                    <div key={`${file.file_hash}${file.version_number}`}>
                         <p>
-                            <a  href={`http://localhost:8001${file.file}`} 
+                            <a  href={`${BASE_URL}${file.file}`} 
                                 target="_blank"
                                 rel="noreferrer"
                                 className="file-version-link">

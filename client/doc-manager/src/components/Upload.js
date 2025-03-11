@@ -30,14 +30,13 @@ function Upload({ setData, fileFileName, isFilenameReadOnly }) {
     
         try {
             const response = await uploadFile(file, filename);
-            console.log('is response ok?');
+
             if (response) {
                 setMessage("File uploaded successfully!");
                 setFile(null);
                 if (!isFilenameReadOnly) { 
                     setFilename("");
                 }
-                console.log("Uploaded file:", response);
 
                 const updatedFiles = isFilenameReadOnly 
                     ? await getFileVersionsByName(filename) 

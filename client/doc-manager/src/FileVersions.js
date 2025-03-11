@@ -7,7 +7,7 @@ import "./FileVersions.css";
 function FileVersionsList(props) {
   const file_versions = props.file_versions;
   return file_versions.map((file_version) => (
-    <div className="file-version" key={file_version.id}>
+    <div className="file-version" key={`${file_version.file_hash}${file_version.version_number}`}>
       <h2>
         <Link to={`/${file_version.file_name}`}> {file_version.file_name} </Link>
       </h2>
@@ -22,7 +22,6 @@ function FileVersionsList(props) {
 
 function FileVersions() {
   const [data, setData] = useState([]);
-  console.log(data);
 
   useEffect(() => {
     const dataFetch = async () => {

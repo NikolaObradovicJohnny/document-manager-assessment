@@ -1,5 +1,5 @@
-const BASE_URL = "http://localhost:8001/";
-const API_BASE_URL = `${BASE_URL}api/`;
+const BASE_URL = process.env.REACT_APP_BASE_URL;
+const API_BASE_URL = `${BASE_URL}/api/`;
 
 const getToken = () => localStorage.getItem("token");
 
@@ -27,7 +27,7 @@ export const post = async (endpoint, data, isFormData = false) => {
 };
 
 export const postBaseUrl = async (endpoint, data) => {
-    const response = await fetch(`${BASE_URL}${endpoint}`, {
+    const response = await fetch(`${BASE_URL}/${endpoint}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
