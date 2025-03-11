@@ -36,13 +36,20 @@ This is a document management application that allows users to upload documents,
 Clone the repository.
 Create a `.env` file for environment variables and save in /settings/ folder:
 
-### Django/backend:
+
+### .env content for Django/backend:
+
+You should add SUPERUSER_EMAIL and SUPERUSER_PASSWORD in .env file in **settings** folder inside Django project. (path: src\propylon_document_manager\site\settings)
+
 ```bash
 SUPERUSER_EMAIL=admin@admin.com
 SUPERUSER_PASSWORD=admin1234
 ```
 
-### React/frontend:
+### .env content for React/frontend:
+
+You should add this in .env file in **root** folder inside React project. (path: client\doc-manager)
+
 ```bash
 REACT_APP_BASE_URL=http://localhost:8001
 ```
@@ -59,6 +66,7 @@ Authorization: Token <your_token>
 ### 1. Login
 
 **POST** `/api/login/`
+
 Authenticate and get a token.
 
 **Request body:**
@@ -79,37 +87,42 @@ Authenticate and get a token.
 ### 2. Upload a Document
 
 **POST** `/api/documents/upload-document/`
+
 Upload a new file. The file is attached as form-data.
 
 **Request:** multipart/form-data
 ```bash
-file: file 
-file_name: "file name"
+file: file (file)
+file_name: "Document 1" (text)
 ```
 **Response:**
 ```bash
 {
-    file_name:"Nomad",
+    file_name:"Document 1",
     file_owner:1,
     version_number:4,
     file:"/media/documents/2bb5655a7d4b6e2321a76d4b11efe8b42187f217161637fa9f97d59875375f97_DgXKNJ2.pdf",
-    file_hash:"2bb5655a7d4b6e2321a76d4b11efe8b42187f217161637fa9f97d59875375f97",uploaded_at:"2025-03-11T19:44:22.942838Z"
+    file_hash:"2bb5655a7d4b6e2321a76d4b11efe8b42187f217161637fa9f97d59875375f97",
+    uploaded_at:"2025-03-11T19:44:22.942838Z"
 }
 ```
 
 ### 3. Get Document by Hash
 **GET** `/api/files/<file_hash>/`
+
 Retrieve a file by its unique hash.
 
 **Example:**
 ```bash
 GET /api/files/20a9018682ba89ddd49f37ab80833b5ce5cab72b816b90215cfb570cebdb2092/
 ```
+
 **Response:**
 - Returns the file as a binary stream.
 
 ### 4. Get All Versions of a Document
 **GET** `/api/documents/<file_name>/all/`
+
 Retrieve all versions of a document by its name.
 
 **Example:**
@@ -215,7 +228,7 @@ Authorization: Token <your_auth_token>
 **Error Responses**
 
 |Status|Code|Message|
-| ------------ | ------------ |
+| ------------ | ------------ | ------------ |
 |403|Forbidden|User is not authenticated or does not own the requested file.|
 |401|Unauthorized|Token is missing or invalid.|
 
