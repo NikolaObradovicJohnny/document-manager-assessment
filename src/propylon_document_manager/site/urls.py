@@ -17,7 +17,7 @@ urlpatterns = [
     path("api/", include("propylon_document_manager.site.api_router")),
     # DRF auth token
     path("api-auth/", include("rest_framework.urls")),
-    # path("auth-token/", obtain_auth_token),
+    # Custom Auth methods for login and token validation
     path("auth-token/", CustomAuthToken.as_view(), name="auth-token"),
     path("test-auth/", TestAuthView.as_view(), name="test-auth"),
 ]
