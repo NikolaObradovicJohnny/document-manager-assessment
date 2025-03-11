@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./FileVersions.css";
 import Upload from "./components/Upload";
 import { Link } from "react-router-dom";
+import { getFileVersions } from "./services/apiService";
 
 function FileVersionsList(props) {
   const file_versions = props.file_versions;
@@ -25,17 +26,7 @@ function FileVersions({ token }) {
 
   useEffect(() => {
     const dataFetch = async () => {
-      const data = await (
-        await fetch("http://localhost:8001/api/file_versions",  {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Token ${token}`,
-          },
-        })
-      ).json();
-
-      // set state when the data received
+      const data = await getFileVersions();
       setData(data);
     };
 

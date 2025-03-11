@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Upload from "./components/Upload";
+import { getFileVersionsByName } from "./services/apiService";
 
 function FileDetails({ token }) {
     const { filename } = useParams();
@@ -8,21 +9,18 @@ function FileDetails({ token }) {
 
     useEffect(() => {
         const fetchVersions = async () => {
-            const response = await fetch(`http://localhost:8001/api/documents/${filename}/all`, {
-                headers: { Authorization: `Token ${token}` },
-            });
-            if (response.ok) {
-                setFileVersions(await response.json());
-            }
+            const response = await getFileVersionsByName(filename);
+            setFileVersions(response);
         };
         fetchVersions();
-    }, [filename, token]);
+
+    }, [filename]);
 
 
     return (
         <div>
             <h1>File: {filename}</h1>
-            <Upload setData={fileVersions} fileFileName={filename} isFilenameReadOnly={true} />
+            <Upload setData={setFileVersions} fileFileName={filename} isFilenameReadOnly={true} />
             <h2>Versions</h2>
             {fileVersions.length > 0 ? (
                 fileVersions.map((file) => (

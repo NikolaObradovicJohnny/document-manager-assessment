@@ -56,6 +56,16 @@ button.logout:hover {
   background-color: #fff;
   transition-duration: 1.2s;
 }
+a.homepage {
+  padding: 12px 21px;
+  border-bottom-right-radius: 15px;
+  border-right: none;
+  border-top: none;
+  float: left;
+  background-color: deeppink;
+  color: #fff;
+  text-decoration: none;
+}
 
 @keyframes App-logo-spin {
   from {

@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import './Upload.css';
+import { uploadFile, getFileVersions, getFileVersionsByName } from "../services/apiService";
 
 function Upload({ setData, fileFileName, isFilenameReadOnly }) {
-    const [token, setToken] = useState(localStorage.getItem('token'));
     const [file, setFile] = useState(null);
     const [filename, setFilename] = useState(fileFileName || '');
     const [error, setError] = useState('');
@@ -10,13 +10,6 @@ function Upload({ setData, fileFileName, isFilenameReadOnly }) {
     const fileInputRef = useRef(null);
     const readOnlyFileName = isFilenameReadOnly;
   
-    useEffect(() => {
-      const storedToken = localStorage.getItem('token');
-      if (storedToken) {
-        setToken(storedToken);
-      }
-    }, []);
-
     const handleFileChange = (e) => {
         const selectedFile = e.target.files[0];
         if (selectedFile) {
@@ -34,44 +27,25 @@ function Upload({ setData, fileFileName, isFilenameReadOnly }) {
             setError("Please select a file to upload.");
             return;
         }
-
-        const formData = new FormData();
-        formData.append("file", file);  // Append the file
-        formData.append("file_name", filename); // Append the filename
     
         try {
-            const response = await fetch("http://localhost:8001/api/upload-document/", {
-                method: "POST",
-                headers: {
-                    Authorization: `Token ${token}`,
-                },
-                body: formData,
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
+            const response = await uploadFile(file, filename);
+            console.log('is response ok?');
+            if (response) {
                 setMessage("File uploaded successfully!");
                 setFile(null);
                 if (!isFilenameReadOnly) { 
                     setFilename("");
                 }
-                console.log("Uploaded file:", data);
+                console.log("Uploaded file:", response);
 
-                const updatedResponse = await fetch("http://localhost:8001/api/file_versions", {
-                    headers: {
-                        Authorization: `Token ${token}`,
-                    },
-                });
-                if (updatedResponse.ok) {
-                    const updatedFiles = await updatedResponse.json();
-                    setData(updatedFiles);
-                    setFile(null);
-                    setFilename("");
-                }
+                const updatedFiles = isFilenameReadOnly 
+                    ? await getFileVersionsByName(filename) 
+                    : await getFileVersions();
+                setData(updatedFiles);
 
             } else {
-                setError(data.detail || "Upload failed");
+                setError(response.detail || "Upload failed");
             }
         } catch (error) {
             console.error("Upload error:", error);

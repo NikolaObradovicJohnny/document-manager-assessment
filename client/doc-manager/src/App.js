@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, Link } from "react-router-dom";
 import './App.css';
 import FileVersions from './FileVersions';
 import FileDetails from './FileDetails';
 import Login from './components/Login';
+import { logout } from "./services/apiService";
 
 
 function App() {
@@ -22,13 +23,14 @@ function App() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    logout();
     setToken(null);
   };
 
   return (
     <Router>
       <div className="App">
+      {token ? <Link className="homepage" to={'/'}> Homepage </Link> : null}
       {token ? <button className="logout" onClick={handleLogout}>Logout</button> : null}
         <header className="App-header">
           <Routes>

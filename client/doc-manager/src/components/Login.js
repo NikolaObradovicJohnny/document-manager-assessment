@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import { login } from "../services/apiService";
 import './Login.css';
+
 
 function Login({ onLoginSuccess }) {
   const [email, setEmail] = useState('');
@@ -10,24 +12,13 @@ function Login({ onLoginSuccess }) {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    
-    const response = await fetch('http://localhost:8001/auth-token/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
-    });
+    const response = await login(email, password);
 
-    const data = await response.json();
-
-    if (response.ok) {
-      // Store token in localStorage
-      localStorage.setItem('token', data.token);
-      onLoginSuccess(data.token);
+    if (response.token) {
+      onLoginSuccess(response.token);
       navigate("/");
     } else {
-      setError(data.detail || 'Login failed');
+      setError(response.detail || 'Login failed');
     }
   };
 
