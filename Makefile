@@ -90,6 +90,10 @@ fixture: build makemigrations migrate plain-fixture
 plain-fixture:
 	$(IN_ENV) django-admin load_file_fixtures
 
+populate-file-hash:
+	$(IN_ENV) django-admin populate_file_hash
+
+
 superuser:
 	$(IN_ENV) django-admin createsuperuser --email obradovic.nix@gmail.com
 

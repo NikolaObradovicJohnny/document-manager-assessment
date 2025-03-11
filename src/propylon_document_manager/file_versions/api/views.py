@@ -1,25 +1,24 @@
-from django.shortcuts import render
+from django.contrib.auth import authenticate
+from django.core.files.storage import default_storage
 from django.db import models  # Add this import
+from django.http import FileResponse, Http404
+from django.shortcuts import render, get_object_or_404
 
+from rest_framework import viewsets, permissions, status
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
 from rest_framework.mixins import RetrieveModelMixin, ListModelMixin
 from rest_framework.viewsets import GenericViewSet
-
-from ..models import FileVersion
-from .serializers import FileVersionSerializer
-from .permissions import IsOwner
-
-from rest_framework.authentication import TokenAuthentication, SessionAuthentication
-from rest_framework import viewsets, permissions, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.exceptions import PermissionDenied
-from django.shortcuts import get_object_or_404
 
-from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.authtoken.models import Token
-from django.contrib.auth import authenticate
+from ..models import FileVersion
+from .serializers import FileVersionSerializer
+from .permissions import IsOwner
 
 class CustomAuthToken(ObtainAuthToken):
     permission_classes = [AllowAny]
@@ -156,6 +155,24 @@ def get_all_versions_of_document(request, filename):
 
     serializer = FileVersionSerializer(query, many=True)
     return Response(serializer.data)
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_file_by_hash(request, file_hash):
+    """Retrieve a document using its unique hash."""
+    file_version = FileVersion.objects\
+        .filter(file_hash=file_hash, file_owner=request.user)\
+        .order_by("-version_number")\
+        .first()
+
+    if not file_version:
+        return Response({"error": "File not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    file_path = file_version.file.path
+    if not default_storage.exists(file_path):
+        return Response({"error": "File not found in storage"}, status=status.HTTP_404_NOT_FOUND)
+
+    return FileResponse(open(file_path, 'rb'), as_attachment=True, filename=file_version.file.name)
 
 class TestAuthView(APIView):
     permission_classes = [IsAuthenticated]

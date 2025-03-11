@@ -1,6 +1,8 @@
 import hashlib
+import os
 from django.db import models
 from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.db.models import CharField, EmailField
@@ -75,24 +77,29 @@ def get_default_user():
     return User.objects.filter(is_superuser=True).first() or User.objects.first()
 
 class FileVersion(models.Model):
-    # file_name = models.fields.CharField(max_length=512)
     file_name = models.CharField(max_length=512)
     file_owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="documents", default=get_default_user)
     version_number = models.fields.IntegerField()
-    # file_hash = models.CharField(max_length=64, unique=True)
+    file_hash = models.CharField(max_length=64, unique=False, blank=True, null=True)
     file = models.FileField(upload_to="documents/", default="documents/default.pdf")
     uploaded_at = models.DateTimeField(default=timezone.now)
         
     class Meta:
         unique_together = ("file_name", "file_owner", "version_number")  # Ensures unique version per document
 
-    # def save(self, *args, **kwargs):
-    #     """Generate a hash and prevent duplicate storage."""
-    #     self.file_hash = generate_file_hash(self.file)
+    def save(self, *args, **kwargs):
+        """Override save to use hash-based file storage."""
+        if not self.file_hash:
+            self.file_hash = generate_file_hash(self.file)
         
-    #     # Check if file with same hash already exists
-    #     existing = FileVersion.objects.filter(file_hash=self.file_hash).first()
-    #     if existing:
-    #         self.file = existing.file  # Use existing file, avoid storing duplicate
+        # Rename file based on its hash
+        file_extension = os.path.splitext(self.file.name)[-1]
+        new_filename = f"{self.file_hash}{file_extension}"
+        file_path = os.path.join('documents/', new_filename)
 
-    #     super().save(*args, **kwargs)
+        # Store file using hash-based naming
+        if not default_storage.exists(file_path):  # Avoid overwriting
+            default_storage.save(file_path, ContentFile(self.file.read()))
+        
+        self.file.name = file_path  # Set new file name
+        super().save(*args, **kwargs)
