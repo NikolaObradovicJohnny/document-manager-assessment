@@ -13,7 +13,7 @@ function Upload({ setData, fileFileName, isFilenameReadOnly }) {
     const handleFileChange = (e) => {
         const selectedFile = e.target.files[0];
         if (selectedFile) {
-            setFile(selectedFile);  // Get the selected file
+            setFile(selectedFile); 
             if (!isFilenameReadOnly) { 
                 setFilename(selectedFile.name);
             }

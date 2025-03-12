@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate
 from django.core.files.storage import default_storage
-from django.db import models  # Add this import
+from django.db import models
 from django.http import FileResponse, Http404
 from django.shortcuts import render, get_object_or_404
 
@@ -40,7 +40,7 @@ class CustomAuthToken(ObtainAuthToken):
 
 class FileVersionViewSet(RetrieveModelMixin, ListModelMixin, GenericViewSet):
     authentication_classes = [TokenAuthentication, SessionAuthentication]
-    permission_classes = [IsAuthenticated, IsOwner] # [AllowAny]# 
+    permission_classes = [IsAuthenticated, IsOwner]
     serializer_class = FileVersionSerializer
     queryset = FileVersion.objects.none()
     lookup_field = "id"
